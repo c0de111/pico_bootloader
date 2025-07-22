@@ -1,0 +1,19 @@
+/build/_deps/picotool-src/
+# Ignore build directories and artifacts
+build/
+_deps/
+generated/
+pico-sdk/
+
+# Ignore temporary or build-related files
+*.o
+*.so
+*.a
+*.log
+*.cmake
+*.stamp
+*.tmp
+*.xcf
+
+# Ignore specific generated files
+pico_flash_region.ld
