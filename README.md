@@ -1,6 +1,6 @@
 # RP2040 Dual-Slot Bootloader
 
-This repository implements a robust dual-slot bootloader for the Raspberry Pi Pico W (RP2040), enabling seamless over-the-air firmware updates and fallback logic. It supports two independent firmware slots, and intelligently selects the latest valid version to boot. The project is written in C and integrates tightly with the RP2040 hardware and flash layout.
+This repository implements a simple dual-slot bootloader for the Raspberry Pi Pico W (RP2040), enabling "over-the-air" firmware updates via WIFI (https://github.com/c0de111/esign). It supports two independent firmware slots, and selects the latest valid version to boot. The firmware in each slot is identified by a header (first 256 Bytes), the standard "boot2" section is removed from the application firmware.  
 
 
 ## Project Structure
@@ -51,9 +51,9 @@ typedef struct __attribute__((packed)) {
 } firmware_header_t;
 ```
 
-The header is defined individually in each firmware (`application1.c`, `application2.c`) and placed explicitly at the beginning of flash by the linker.
+The header is defined individually in each firmware (`application1.c`, `application2.c`) and placed explicitly at the beginning of flash (first 256 Byte) by the linker. 
 
-## 🧠 Boot Decision Logic
+## Boot Decision Logic
 
 The bootloader uses the following logic to select which firmware to boot:
 
@@ -99,10 +99,7 @@ openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg   -c "adapter speed 5000
 openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg   -c "adapter speed 5000"   -c "program build/application2.bin 0x100f3000 reset exit"
 ```
 
-## 🎯 Goals
+## Goals
 
 - **Dual-Slot Updates**: Bootloader can choose from two firmware slots (Slot 0 and Slot 1).
-- **Resilience**: Always boot at least one working firmware.
-- **OTA-Ready**: Can switch slots after remote updates.
-- **Transparent**: Human-readable metadata in log.
-- **Clean Integration**: Flash-safe and linker-aligned.
+- **OTA / WIFI / Updates**: Can switch slots after remote updates, update transfer and writing to flash can be completed and checked before new firmware is used.
