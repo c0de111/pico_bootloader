@@ -1,6 +1,6 @@
 # RP2040 Dual-Slot Bootloader
 
-This repository implements a simple dual-slot bootloader for the Raspberry Pi Pico W (RP2040), enabling "over-the-air" firmware updates via WIFI (https://github.com/c0de111/esign). It supports two independent firmware slots, and selects the latest valid version to boot. The firmware in each slot is identified by a header (first 256 Bytes), the standard "boot2" section is removed from the application firmware.  
+This repository implements a simple dual-slot bootloader for the Raspberry Pi Pico W (RP2040), enabling "over-the-air" firmware updates via WIFI (https://github.com/c0de111/esign). It supports two independent firmware slots, and selects the latest valid version to boot. The firmware in each slot is identified by a header (first 256 Bytes), the standard "boot2" section is removed from the application firmware. See also https://blog.usedbytes.com/2021/12/pico-serial-bootloader/ and https://github.com/usedbytes/rp2040-serial-bootloader
 
 
 ## Project Structure
