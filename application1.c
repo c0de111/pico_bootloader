@@ -22,7 +22,7 @@ void switch_off(void) {
 __attribute__((section(".firmware_header")))
 const firmware_header_t firmware_header = {
     .magic = FIRMWARE_MAGIC,
-    .valid_flag = 0,
+    .valid_flag = 1,
     .build_date = "250719",
     .git_version = "v1.2.0-6-gcddef-dirty",
     .firmware_size = 23252, //

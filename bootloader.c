@@ -89,7 +89,7 @@ static void bootloader_select_firmware(void) {
     printf("Git Version  : %.32s\n", slot0->git_version);
     printf("Size         : %lu bytes\n", (unsigned long)slot0->firmware_size);
     printf("Slot ID      : %u\n", slot0->slot);
-    printf("CRC32        : 0x%08lX\n", (unsigned long)slot0->crc32);
+    // printf("CRC32        : 0x%08lX\n", (unsigned long)slot0->crc32);
 
     printf("------ Firmware Slot 1 ------\n");
     printf("Magic        : %-13.*s\n", FIRMWARE_MAGIC_LEN, slot1->magic);
@@ -98,7 +98,8 @@ static void bootloader_select_firmware(void) {
     printf("Git Version  : %.32s\n", slot1->git_version);
     printf("Size         : %lu bytes\n", (unsigned long)slot1->firmware_size);
     printf("Slot ID      : %u\n", slot1->slot);
-    printf("CRC32        : 0x%08lX\n", (unsigned long)slot1->crc32);
+    // printf("CRC32        : 0x%08lX\n", (unsigned long)slot1->crc32);
+    fflush(stdout);             // <- USB-Ausgabe sicher abschließen
     #endif
 
     bool valid0 = is_valid_firmware(slot0);
@@ -114,19 +115,23 @@ static void bootloader_select_firmware(void) {
         bool ok1 = parse_git_version(slot1->git_version, &v1);
 
         #ifdef USB_BOOTLOADER_ENABLE
-        printf("[DEBUG] Parsed slot 0: %d.%d.%d build %u (ok=%d)\n", v0.major, v0.minor, v0.patch, v0.build, ok0);
-        printf("[DEBUG] Parsed slot 1: %d.%d.%d build %u (ok=%d)\n", v1.major, v1.minor, v1.patch, v1.build, ok1);
+        // printf("[DEBUG] Parsed slot 0: %d.%d.%d build %u (ok=%d)\n", v0.major, v0.minor, v0.patch, v0.build, ok0);
+        // printf("[DEBUG] Parsed slot 1: %d.%d.%d build %u (ok=%d)\n", v1.major, v1.minor, v1.patch, v1.build, ok1);
         #endif
         if (ok0 && ok1) {
             int cmp = compare_versions(&v0, &v1);
             if (cmp >= 0) {
                 #ifdef USB_BOOTLOADER_ENABLE
                 printf("→ Booting Slot 0 (newer or equal)\n");
+                fflush(stdout);             // <- USB-Ausgabe sicher abschließen
+                sleep_ms(100);
                 #endif
                 jump_to_firmware(FIRMWARE_SLOT0_FLASH_OFFSET);
             } else {
                 #ifdef USB_BOOTLOADER_ENABLE
                 printf("→ Booting Slot 1 (newer)\n");
+                fflush(stdout);             // <- USB-Ausgabe sicher abschließen
+                sleep_ms(100);
                 #endif
                 jump_to_firmware(FIRMWARE_SLOT1_FLASH_OFFSET);
             }
@@ -137,6 +142,8 @@ static void bootloader_select_firmware(void) {
     if (valid0) {
         #ifdef USB_BOOTLOADER_ENABLE
         printf("→ Booting Slot 0 (only valid firmware, fallback)\n");
+        fflush(stdout);             // <- USB-Ausgabe sicher abschließen
+        sleep_ms(100);
         #endif
         jump_to_firmware(FIRMWARE_SLOT0_FLASH_OFFSET);
     }
@@ -144,12 +151,16 @@ static void bootloader_select_firmware(void) {
     if (valid1) {
         #ifdef USB_BOOTLOADER_ENABLE
         printf("→ Booting Slot 1 (only valid firmware, fallback)\n");
+        fflush(stdout);             // <- USB-Ausgabe sicher abschließen
+        sleep_ms(100);
         #endif
         jump_to_firmware(FIRMWARE_SLOT1_FLASH_OFFSET);
     }
 
     #ifdef USB_BOOTLOADER_ENABLE
     printf("❌ No valid firmware found. System halted.\n");
+    fflush(stdout);             // <- USB-Ausgabe sicher abschließen
+    sleep_ms(100);
     #endif
 }
 
