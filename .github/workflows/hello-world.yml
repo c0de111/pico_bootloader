@@ -1,0 +1,11 @@
+name: CI Test (hello)
+on:
+workflow_dispatch: {}
+permissions:
+contents: read
+jobs:
+hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Hello World.
